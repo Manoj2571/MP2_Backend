@@ -332,7 +332,7 @@ const verifyToken = (req, res, next) => {
 };
 
 app.post("/api/verifyToken", verifyToken, async (req, res) => {
-  const user = await User.findById(req.userId)
+  const user = await User.findById(req.userId).populate({path: "bookmarks", populate: {path: "author"}})
   return res.status(200).json({message: 'Verification Success.', user})
 } )
 
