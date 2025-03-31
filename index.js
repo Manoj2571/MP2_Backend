@@ -74,6 +74,17 @@ app.get("/api/users", async (req, res) => {
   }
 })
 
+app.post("/api/users/addUser", async (req, res) => {
+  try {
+    const newUser = new User(req.body)
+  const savedUser = await newUser.save()
+  res.status(200).json({message: "User Added Successfully.", user: savedUser})
+  } catch (error) {
+    res.status(500).json({message: "Adding user failed.", error})
+  }
+})
+
+
 
 //update user
 app.post("/api/users/edit/:userId", async (req, res) => {
@@ -192,7 +203,7 @@ app.post("/api/posts/edit/:postId", async (req, res) => {
 
 app.get("/api/posts", async (req, res) => {
   try {
-    const posts = await Post.find().populate([{path: "author"}, {path: "repost", populate: {path: "author"}}])
+    const posts = await Post.find().sort({createdAt: -1}).populate([{path: "author"}, {path: "repost", populate: {path: "author"}}])
     if(posts.length > 0) {
       res.send(posts)
     } else {
